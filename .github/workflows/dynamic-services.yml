@@ -46,7 +46,7 @@ jobs:
           - ${{ fromJson(needs.config.outputs.config).nginx.port }}:80
     steps:
       - name: Test
-        run: curl http://localhost:${{ fromJson(needs.config.outputs.config).nginx.port }}:80
+        run: curl http://localhost:${{ fromJson(needs.config.outputs.config).nginx.port }} >> $GITHUB_STEP_SUMMARY
   runner-job-httpd:
     if: ${{ fromJson(needs.config.outputs.config).httpd }}
     runs-on: ubuntu-latest
@@ -58,4 +58,4 @@ jobs:
           - ${{ fromJson(needs.config.outputs.config).httpd.port }}:80
     steps:
       - name: Test
-        run: curl http://localhost:${{ fromJson(needs.config.outputs.config).httpd }}:80
+        run: curl http://localhost:${{ fromJson(needs.config.outputs.config).httpd.port }} >> $GITHUB_STEP_SUMMARY
