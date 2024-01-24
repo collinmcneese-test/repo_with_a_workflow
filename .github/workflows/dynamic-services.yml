@@ -31,8 +31,8 @@ jobs:
     steps:
       - name: Debug
         run: |
-          echo '${{ fromJson(needs.config.outputs.config) }}'
-          echo '${{ toJson(needs.config.outputs.config) }}'
+          echo '${{ fromJson(needs.config.outputs.config) }}' >> $GITHUB_STEP_SUMMARY
+          echo '${{ toJson(needs.config.outputs.config) }}' >> $GITHUB_STEP_SUMMARY
 
   runner-job-nginx:
     if: ${{ contains(needs.config.outputs.config.services, 'nginx') }}
