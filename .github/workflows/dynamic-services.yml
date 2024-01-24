@@ -31,31 +31,31 @@ jobs:
     steps:
       - name: Debug
         run: |
-          echo '${{ fromJson(needs.config.outputs.config).services }}' >> $GITHUB_STEP_SUMMARY
-          echo '${{ needs.config.outputs.config.services }}' >> $GITHUB_STEP_SUMMARY
+          echo '${{ fromJson(needs.config.outputs.config).nginx }}' >> $GITHUB_STEP_SUMMARY
+          echo '${{ needs.config.outputs.config }}' >> $GITHUB_STEP_SUMMARY
           echo '${{ toJson(needs.config.outputs.config) }}' >> $GITHUB_STEP_SUMMARY
 
   runner-job-nginx:
-    if: ${{ fromJson(needs.config.outputs.config).services.nginx }}
+    if: ${{ fromJson(needs.config.outputs.config).nginx }}
     runs-on: ubuntu-latest
     needs: config
     services:
       nginx:
         image: nginx:latest
         ports:
-          - ${{ needs.config.outputs.config.port }}:80
+          - ${{ needs.config.outputs.config.nginx.port }}:80
     steps:
       - name: Test
-        run: curl http://localhost:${{ needs.config.outputs.config.port }}
+        run: curl http://localhost:${{ needs.config.outputs.config.nginx.port }}
   runner-job-httpd:
-    if: ${{ fromJson(needs.config.outputs.config).services.httpd }}
+    if: ${{ fromJson(needs.config.outputs.config).httpd }}
     runs-on: ubuntu-latest
     needs: config
     services:
       nginx:
         image: nginx:latest
         ports:
-          - ${{ needs.config.outputs.config.port }}:80
+          - ${{ needs.config.outputs.config.httpd.port }}:80
     steps:
       - name: Test
-        run: curl http://localhost:${{ needs.config.outputs.config.port }}
+        run: curl http://localhost:${{ needs.config.outputs.config.httpd.port }}
