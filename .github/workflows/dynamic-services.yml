@@ -25,13 +25,13 @@ jobs:
             const yaml = require('js-yaml');
             const config = yaml.load(fs.readFileSync(path.join(process.env.GITHUB_WORKSPACE, '.github', 'actions', 'config', 'service1.yml'), 'utf8'));
             return config.services
+
   debug:
     runs-on: ubuntu-latest
     needs: config
     steps:
       - name: Debug
         run: |
-          echo '${{ fromJson(needs.config.outputs.config).nginx }}' >> $GITHUB_STEP_SUMMARY
           echo '${{ needs.config.outputs.config }}' >> $GITHUB_STEP_SUMMARY
           echo '${{ toJson(needs.config.outputs.config) }}' >> $GITHUB_STEP_SUMMARY
 
@@ -47,6 +47,7 @@ jobs:
     steps:
       - name: Test
         run: curl http://localhost:${{ fromJson(needs.config.outputs.config).nginx.port }} >> $GITHUB_STEP_SUMMARY
+
   runner-job-httpd:
     if: ${{ fromJson(needs.config.outputs.config).httpd }}
     runs-on: ubuntu-latest
