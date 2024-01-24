@@ -11,7 +11,7 @@ jobs:
       config: ${{ steps.config.outputs.result }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Install Node dependencies
@@ -30,7 +30,10 @@ jobs:
     needs: config
     steps:
       - name: Debug
-        run: echo '${{ fromJson(needs.config.outputs.config) }}'
+        run: |
+          echo '${{ fromJson(needs.config.outputs.config) }}'
+          echo '${{ toJson(needs.config.outputs.config) }}'
+
   runner-job-nginx:
     if: ${{ contains(needs.config.outputs.config.services, 'nginx') }}
     runs-on: ubuntu-latest
