@@ -2,3 +2,6 @@ services:
   nginx:
     image: nginx:latest
     port: 15432
+  httpd:
+    image: httpd:latest
+    port: 15433
