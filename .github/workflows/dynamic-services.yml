@@ -30,9 +30,9 @@ jobs:
     needs: config
     steps:
       - name: Debug
-        run: echo '${{ needs.config.outputs }}'
+        run: echo '${{ fromJson(needs.config.outputs.config) }}'
   runner-job-nginx:
-    if: needs.config.outputs.config.services.nginx
+    if: ${{ contains(needs.config.outputs.config.services, 'nginx') }}
     runs-on: ubuntu-latest
     needs: config
     services:
@@ -44,7 +44,7 @@ jobs:
       - name: Test
         run: curl http://localhost:${{ needs.config.outputs.config.port }}
   runner-job-httpd:
-    if: needs.config.outputs.config.services.httpd
+    if: ${{ contains(needs.config.outputs.config.services, 'httpd') }}
     runs-on: ubuntu-latest
     needs: config
     services:
