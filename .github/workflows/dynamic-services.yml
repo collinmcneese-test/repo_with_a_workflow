@@ -35,7 +35,7 @@ jobs:
           echo '${{ toJson(needs.config.outputs.config) }}' >> $GITHUB_STEP_SUMMARY
 
   runner-job-nginx:
-    if: ${{ contains(needs.config.outputs.config.services, 'nginx') }}
+    if: ${{ fromJson(needs.config.outputs.config).services.nginx }}
     runs-on: ubuntu-latest
     needs: config
     services:
@@ -47,7 +47,7 @@ jobs:
       - name: Test
         run: curl http://localhost:${{ needs.config.outputs.config.port }}
   runner-job-httpd:
-    if: ${{ contains(needs.config.outputs.config.services, 'httpd') }}
+    if: ${{ fromJson(needs.config.outputs.config).services.httpd }}
     runs-on: ubuntu-latest
     needs: config
     services:
