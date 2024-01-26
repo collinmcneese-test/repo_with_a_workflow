@@ -40,7 +40,7 @@ jobs:
           - 4566:4566
           - 8080:8080
       opensearch:
-        image: amazon/opensearch:1.0.0
+        image: opensearchproject/opensearch:latest
         env:
           discovery.type: single-node
           cluster.name: opensearch-cluster
