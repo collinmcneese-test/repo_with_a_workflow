@@ -1,0 +1,63 @@
+name: workflow with services
+
+on:
+  push:
+    branches:
+      - services-workflow
+  workflow_dispatch:
+
+jobs:
+  run:
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      localstack:
+        image: localstack/localstack
+        env:
+          SERVICES: s3
+          DEBUG: 1
+          DATA_DIR: /tmp/localstack/data
+          PORT_WEB_UI: 8080
+          LAMBDA_EXECUTOR: docker
+          LAMBDA_REMOTE_DOCKER: 1
+          LAMBDA_REMOVE_CONTAINERS: 1
+          LAMBDA_DOCKER_NETWORK: lambdanetwork
+          LAMBDA_CONTAINER_IMAGE: lambci/lambda:python3.8
+          LAMBDA_TMP_DIR: /tmp/lambda
+          DOCKER_HOST: tcp://docker:2375
+          HOST_TMP_FOLDER: /tmp/localstack
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+        ports:
+          - 4566:4566
+          - 8080:8080
+      opensearch:
+        image: amazon/opensearch:1.0.0
+        env:
+          discovery.type: single-node
+          cluster.name: opensearch-cluster
+          bootstrap.memory_lock: "true"
+          "OPENSEARCH_JAVA_OPTS": "-Xms512m -Xmx512m"
+        ports:
+          - 9200:9200
+          - 9300:9300
+        volumes:
+          - opensearch-data:/usr/share/opensearch/data
+          - opensearch-logs:/usr/share/opensearch/logs
+          - opensearch-config:/usr/share/opensearch/config
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+    runs-on: ubuntu-latest
+    steps:
+      - name: docker ps
+        run: docker ps >> $GITHUB_STEP_SUMMARY
