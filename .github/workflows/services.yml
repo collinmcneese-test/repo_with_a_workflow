@@ -8,6 +8,11 @@ on:
 
 jobs:
   run:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - self-hosted
     services:
       postgres:
         image: postgres
@@ -57,7 +62,10 @@ jobs:
         image: redis
         ports:
           - 6379:6379
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: docker ps
-        run: docker ps >> $GITHUB_STEP_SUMMARY
+        run: |
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          docker ps >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
