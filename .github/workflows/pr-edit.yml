@@ -1,0 +1,12 @@
+name: pr-edit
+on:
+  pull_request:
+    types:
+    - edited
+jobs:
+  pr-edit:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo ${{ github.event.pull_request }}
+    - name: pr changes
+      run: echo ${{ github.event.pull_request.changes }}
